@@ -1,20 +1,53 @@
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
-import { Form, Input, Button, Header, Label, RegisterLink } from "./Styled";
+import {
+  Form,
+  Input,
+  Button,
+  Header,
+  Label,
+  RegisterLink,
+  ErrorMessage
+} from "./Styled";
 
 export default class SingIn extends Component {
   state = {
     email: "",
-    password: ""
+    password: "",
+    singinError: ""
   };
 
   handleInputChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({
+      [e.target.name]: e.target.value,
+      singinError: ""
+    });
   };
+  // .catch(err => this.setState({ backendError: err }))
 
-  onFormSubmit = e => {
-    this.props.onSingin();
-    console.log(this.state);
+  onFormSubmit = () => {
+    const model = {
+      email: this.state.email,
+      password: this.state.password
+    };
+
+    fetch("http://localhost:3000/singin", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(model)
+    })
+      .then(resp => {
+        if (!resp.ok) {
+          throw resp;
+        }
+        return resp.json();
+      })
+      .then(data => this.props.onSingin(data))
+      .catch(err =>
+        err
+          .json()
+          .then(errorResponse => this.setState({ singinError: errorResponse }))
+      );
   };
 
   render() {
@@ -23,6 +56,7 @@ export default class SingIn extends Component {
     ) : (
       <Form>
         <Header> Sing In </Header>
+        <ErrorMessage> {this.state.singinError} </ErrorMessage>
         <Label htmlFor="email"> email </Label>
         <Input name="email" onChange={this.handleInputChange} />
         <Label htmlFor="password"> password </Label>

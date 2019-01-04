@@ -10,37 +10,32 @@ import Background from "./components/Background";
 
 class App extends Component {
   state = {
-    isUserAuthenticated: false
+    isUserAuthenticated: false,
+    currentUser: {}
   };
 
-  onSingIn = () => {
-    this.setState({ isUserAuthenticated: true });
+  onSingIn = data => {
+    this.setState({ isUserAuthenticated: true, currentUser: data });
   };
 
   onSingOut = () => {
     this.setState({ isUserAuthenticated: false });
   };
 
-  onRegister = () => {
-    this.setState({ isUserAuthenticated: true });
+  onRegister = data => {
+    this.setState({ isUserAuthenticated: true, currentUser: data });
+  };
+
+  onRankUpdate = entries => {
+    this.setState(prevState => ({
+      currentUser: {
+        ...prevState.currentUser,
+        entries: entries
+      }
+    }));
   };
 
   render() {
-    const PrivateRoute = ({ component: Component, ...rest }) => {
-      return (
-        <Route
-          {...rest}
-          render={props =>
-            this.state.isUserAuthenticated ? (
-              <Component {...props} />
-            ) : (
-              <Redirect to="/singin" />
-            )
-          }
-        />
-      );
-    };
-
     return (
       <div className="app">
         <Background />
@@ -70,7 +65,20 @@ class App extends Component {
                 />
               )}
             />
-            <PrivateRoute exact path="/" component={Mainscreen} />
+            <Route
+              exact
+              path="/"
+              render={() =>
+                this.state.isUserAuthenticated ? (
+                  <Mainscreen
+                    currentUser={this.state.currentUser}
+                    onRankUpdate={this.onRankUpdate}
+                  />
+                ) : (
+                  <Redirect to="/singin" />
+                )
+              }
+            />
           </span>
         </Router>
       </div>

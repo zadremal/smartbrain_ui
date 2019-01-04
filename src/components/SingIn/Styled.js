@@ -60,3 +60,9 @@ export const RegisterLink = styled.div`
   margin-bottom: 16px;
   text-align: center;
 `;
+
+export const ErrorMessage = styled.p`
+  text-align: center;
+  min-height: 20px;
+  color: red;
+`;

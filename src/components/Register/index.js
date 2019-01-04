@@ -13,9 +13,30 @@ export default class index extends Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  onFormSubmit = e => {
-    console.log(this.state);
-    this.props.onRegister();
+  onFormSubmit = () => {
+    const model = {
+      name: this.state.name,
+      email: this.state.email,
+      password: this.state.password
+    };
+
+    fetch("http://localhost:3000/register", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(model)
+    })
+      .then(resp => {
+        if (!resp.ok) {
+          throw resp;
+        }
+        return resp.json();
+      })
+      .then(data => this.props.onRegister(data))
+      .catch(err =>
+        err
+          .json()
+          .then(errorResponse => this.setState({ singinError: errorResponse }))
+      );
   };
 
   render() {

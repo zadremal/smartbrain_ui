@@ -40,7 +40,20 @@ class Mainscreen extends Component {
     });
     app.models
       .predict("a403429f2ddf4b49b307e318f00e528b", photoUrl)
-      .then(response => this.setRegions(response), err => console.log(err));
+      .then(response => {
+        response &&
+          fetch("http://localhost:3000/image", {
+            method: "put",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              id: this.props.currentUser.id
+            })
+          })
+            .then(resp => resp.ok && resp.json())
+            .then(data => this.props.onRankUpdate(data));
+        this.setRegions(response);
+      })
+      .catch(err => console.log(err));
   };
 
   render() {
@@ -49,7 +62,7 @@ class Mainscreen extends Component {
       <div className="container main">
         <div className="row">
           <div className="col-xs-12 center-xs">
-            <Rank />
+            <Rank currentUser={this.props.currentUser} />
           </div>
           <div className="col-xs-12 center-xs">
             <Form

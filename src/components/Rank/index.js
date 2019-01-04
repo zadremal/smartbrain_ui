@@ -1,11 +1,12 @@
 import React, { Fragment } from "react";
 import { Text, Rank } from "./Styled";
 
-const index = () => {
+const index = props => {
+  const { name, entries } = props.currentUser;
   return (
     <Fragment>
-      <Text>Andrei, your rank is .....</Text>
-      <Rank>#5</Rank>
+      <Text>{`${name}, your current entries count is ..... `}</Text>
+      <Rank>{`#${entries}`}</Rank>
     </Fragment>
   );
 };
