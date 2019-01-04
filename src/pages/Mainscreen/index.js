@@ -1,26 +1,21 @@
 import React, { Component } from "react";
 import Clarifai from "clarifai";
-import Navigation from "../components/Navigation/Navigation";
-import Logo from "../components/Logo/Logo";
-import Rank from "../components/Rank/Rank";
-import Image from "../components/Image/Image";
-import Form from "../components/Form/Form";
+import Rank from "../../components/Rank";
+import Image from "../../components/Image";
+import Form from "../../components/Form";
 
 const app = new Clarifai.App({
   apiKey: process.env.REACT_APP_CLARIFI_API_KEY
 });
 
 class Mainscreen extends Component {
-  constructor() {
-    super();
-    this.state = {
-      input: "",
-      imageUrl: "",
-      regions: [],
-      imageWidth: "",
-      imageHeight: ""
-    };
-  }
+  state = {
+    input: "",
+    imageUrl: "",
+    regions: [],
+    imageWidth: "",
+    imageHeight: ""
+  };
 
   setRegions = data => {
     const element = document.getElementById("analized-image");
@@ -51,14 +46,8 @@ class Mainscreen extends Component {
   render() {
     const { input, regions, imageUrl, imageHeight, imageWidth } = this.state;
     return (
-      <div className="container">
+      <div className="container main">
         <div className="row">
-          <div className="col-xs-6 start-xs">
-            <Logo />
-          </div>
-          <div className="col-xs-6 end-xs">
-            <Navigation />
-          </div>
           <div className="col-xs-12 center-xs">
             <Rank />
           </div>
