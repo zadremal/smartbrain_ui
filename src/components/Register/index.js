@@ -1,16 +1,20 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
-import { Form, Input, Button, Header, Label } from "./Styled";
+import { Form, Input, Button, Header, Label, ErrorMessage } from "../UI/Styled";
 
 export default class index extends Component {
   state = {
     name: "",
     email: "",
-    password: ""
+    password: "",
+    registerError: ""
   };
 
   handleInputChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({
+      [e.target.name]: e.target.value,
+      registerError: ""
+    });
   };
 
   onFormSubmit = () => {
@@ -20,7 +24,7 @@ export default class index extends Component {
       password: this.state.password
     };
 
-    fetch("http://localhost:3000/register", {
+    fetch(`${process.env.REACT_APP_API_URL}/register`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(model)
@@ -33,9 +37,9 @@ export default class index extends Component {
       })
       .then(data => this.props.onRegister(data))
       .catch(err =>
-        err
-          .json()
-          .then(errorResponse => this.setState({ singinError: errorResponse }))
+        this.setState({
+          registerError: "Unable to registrate. Try again later"
+        })
       );
   };
 
@@ -45,13 +49,24 @@ export default class index extends Component {
     ) : (
       <Form>
         <Header> Register </Header>
+        <ErrorMessage> {this.state.registerError} </ErrorMessage>
         <Label htmlFor="name"> name </Label>
         <Input name="name" onChange={this.handleInputChange} />
         <Label htmlFor="email"> email </Label>
         <Input name="email" onChange={this.handleInputChange} />
         <Label htmlFor="password"> password </Label>
-        <Input name="password" onChange={this.handleInputChange} />
-        <Button onClick={this.onFormSubmit} type="button">
+        <Input
+          name="password"
+          type="password"
+          onChange={this.handleInputChange}
+        />
+        <Button
+          onClick={this.onFormSubmit}
+          type="button"
+          disabled={
+            !this.state.name || !this.state.email || !this.state.password
+          }
+        >
           register
         </Button>
       </Form>

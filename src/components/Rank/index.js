@@ -6,7 +6,7 @@ const index = props => {
   return (
     <Fragment>
       <Text>{`${name}, your current entries count is ..... `}</Text>
-      <Rank>{`#${entries}`}</Rank>
+      <Rank>{`${entries}`}</Rank>
     </Fragment>
   );
 };

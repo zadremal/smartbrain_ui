@@ -4,7 +4,9 @@ import { Img, Box, ImageWrap } from "./Styled";
 const Image = ({ imageUrl, regions, height, width }) => {
   return (
     <ImageWrap>
-      <Img id="analized-image" src={imageUrl} alt="face detection image" />
+      {imageUrl && (
+        <Img id="analized-image" src={imageUrl} alt="face detection image" />
+      )}
       {regions.length > 0 &&
         regions.map((region, id) => {
           const { bounding_box } = region.region_info;

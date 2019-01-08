@@ -8,7 +8,7 @@ import {
   Label,
   RegisterLink,
   ErrorMessage
-} from "./Styled";
+} from "../UI/Styled";
 
 export default class SingIn extends Component {
   state = {
@@ -23,15 +23,15 @@ export default class SingIn extends Component {
       singinError: ""
     });
   };
-  // .catch(err => this.setState({ backendError: err }))
 
   onFormSubmit = () => {
+    console.log("api", process.env.REACT_APP_API_URL);
     const model = {
       email: this.state.email,
       password: this.state.password
     };
 
-    fetch("http://localhost:3000/singin", {
+    fetch(`${process.env.REACT_APP_API_URL}/singin`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(model)
@@ -44,9 +44,9 @@ export default class SingIn extends Component {
       })
       .then(data => this.props.onSingin(data))
       .catch(err =>
-        err
-          .json()
-          .then(errorResponse => this.setState({ singinError: errorResponse }))
+        this.setState({
+          singinError: "Unable to singin. Try again later"
+        })
       );
   };
 
@@ -60,8 +60,16 @@ export default class SingIn extends Component {
         <Label htmlFor="email"> email </Label>
         <Input name="email" onChange={this.handleInputChange} />
         <Label htmlFor="password"> password </Label>
-        <Input name="password" onChange={this.handleInputChange} />
-        <Button onClick={this.onFormSubmit} type="button">
+        <Input
+          name="password"
+          type="password"
+          onChange={this.handleInputChange}
+        />
+        <Button
+          onClick={this.onFormSubmit}
+          type="button"
+          // disabled={!this.state.email || !this.state.password}
+        >
           sing in
         </Button>
         <RegisterLink>

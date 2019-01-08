@@ -1,12 +1,7 @@
 import React, { Component } from "react";
-import Clarifai from "clarifai";
 import Rank from "../../components/Rank";
 import Image from "../../components/Image";
 import Form from "../../components/Form";
-
-const app = new Clarifai.App({
-  apiKey: process.env.REACT_APP_CLARIFI_API_KEY
-});
 
 class Mainscreen extends Component {
   state = {
@@ -35,14 +30,23 @@ class Mainscreen extends Component {
   onSubmit = event => {
     event.preventDefault();
     const photoUrl = this.state.input;
-    this.setState({
-      imageUrl: photoUrl
-    });
-    app.models
-      .predict("a403429f2ddf4b49b307e318f00e528b", photoUrl)
-      .then(response => {
-        response &&
-          fetch("http://localhost:3000/image", {
+    fetch(`${process.env.REACT_APP_API_URL}/imageRecognition`, {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        imageUrl: photoUrl
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data) {
+          this.setState(
+            {
+              imageUrl: photoUrl
+            },
+            () => this.setRegions(data)
+          );
+          fetch(`${process.env.REACT_APP_API_URL}/image`, {
             method: "put",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -50,10 +54,11 @@ class Mainscreen extends Component {
             })
           })
             .then(resp => resp.ok && resp.json())
-            .then(data => this.props.onRankUpdate(data));
-        this.setRegions(response);
+            .then(data => this.props.onRankUpdate(data))
+            .catch(err => console.error(err));
+        }
       })
-      .catch(err => console.log(err));
+      .catch(err => console.error(err));
   };
 
   render() {

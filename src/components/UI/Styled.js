@@ -27,22 +27,27 @@ export const Input = styled.input`
   border-radius: 3px;
   border: 2px solid #000;
   padding: 6px 12px;
+  font-weight: 700;
+  font-size: 16px;
 `;
 
 export const Button = styled.button`
   background-color: transparent;
   margin: 20px auto;
   display: block;
-  color: #fff;
   padding: 6px 20px;
   border-radius: 3px;
-  border: 2px solid #000;
   font-size: 16px;
-
+  border: 2px solid #000;
   transition: all 0.2s ease-out;
-  &:hover {
-    background-color: #8a2be2;
-    cursor: pointer;
+  color: #000;
+
+  &:not([disabled]) {
+    color: #fff;
+    &:hover {
+      background-color: #8a2be2;
+      cursor: pointer;
+    }
   }
 `;
 
@@ -56,13 +61,14 @@ export const Label = styled.label`
   font-family: "Inconsolata", monospace, sans-serif;
 `;
 
-export const RegisterLink = styled.div`
-  margin-bottom: 16px;
-  text-align: center;
-`;
-
 export const ErrorMessage = styled.p`
   text-align: center;
   min-height: 20px;
   color: red;
+`;
+
+export const RegisterLink = styled.div`
+  margin-bottom: 16px;
+  text-align: center;
+  color: #000;
 `;
