@@ -1,5 +1,7 @@
 node_modules/
+build/
 .env
 .env.production
 .eslintrc
 .vscode
+.DS_Store
